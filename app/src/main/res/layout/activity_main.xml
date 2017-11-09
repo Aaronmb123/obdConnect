@@ -10,7 +10,7 @@
     tools:context="com.bakeaaro.obdconnect.MainActivity">
 
     <TextView
-        android:text="01 0D, 01 0C ~ 41 0C 0F A0"
+        android:text="01 0D, 01 0C ~ 41 0D xx xx , 41 0C xx xx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -69,9 +69,25 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:layout_marginBottom="5dp"/>-->
 
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
     <Button
-        android:id="@+id/send_cmds_button"
-        android:text="Send Command"
+        android:id="@+id/send_rpm_button"
+        android:text="Send RPM Command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/send_speed_button"
+        android:text="Send Speed Command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/send_garbage_button"
+        android:text="Send Garbage Command"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <TextView
