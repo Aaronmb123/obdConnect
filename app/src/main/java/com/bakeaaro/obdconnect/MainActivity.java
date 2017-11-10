@@ -107,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 int numBytes = 0; // bytes returned from read()
 
                 try {
-                    numBytes = mInputStream.read(mBuffer, 0, 1);
-                    mStrBuffer.append((char)mBuffer[0]);
+                    int i =  mInputStream.read();
+                    mStrBuffer.append(String.format("%X ", i));
                 } catch (IOException e) {
                     mRecvInputTV.setText("error receiving input");
                     return;
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + bytes[0] + " " + bytes[1]);
+                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
                 } catch (IOException e) {
                     mSendCommandTV.setText("Bytes not sent");
                     Writer writer = new StringWriter();
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + bytes[0] + " " + bytes[1]);
+                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
                 } catch (IOException e) {
                     mSendCommandTV.setText("Bytes not sent");
                     Writer writer = new StringWriter();
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + bytes[0] + " " + bytes[1]);
+                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
                 } catch (IOException e) {
                     mSendCommandTV.setText("Bytes not sent");
                     Writer writer = new StringWriter();
