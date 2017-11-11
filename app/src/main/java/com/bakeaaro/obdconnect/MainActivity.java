@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private byte[] mBuffer;
     private StringBuilder mStrBuffer = new StringBuilder();
 
+    private Button mResetStringBuffer;
     private Button mOBDButton;
     private Button mConnectButton;
     private Button mResetOBDButton;
@@ -59,13 +60,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mResetSentTV;
     private TextView mProtocolSentTV;
     private TextView mVerifyProtocolTV;
-
     private TextView mSendCommandTV;
     private TextView mRecvInputTV;
-
     private TextView mErrorTV;
-
-    private EditText mCmdsET;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +71,17 @@ public class MainActivity extends AppCompatActivity {
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        mDeviceTV = (TextView) findViewById(R.id.device_text_view);
+        mResetStringBuffer = (Button) findViewById(R.id.reset_str_buffer_button);
+        mResetStringBuffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mStrBuffer.setLength(0);
+                mStrBuffer.trimToSize();
+                mRecvInputTV.setText("");
+            }
+        });
 
+        mDeviceTV = (TextView) findViewById(R.id.device_text_view);
         mOBDButton = (Button) findViewById(R.id.paired_devices_button);
         mOBDButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
         mResetOBDButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     mOutputStream.write(("AT Z\r").getBytes());
                 } catch (IOException ieo) {
@@ -186,6 +193,13 @@ public class MainActivity extends AppCompatActivity {
                     mErrorTV.setText(s);
                     return;
                 }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
                 mSendCommandTV.setText("AT Z\\r");
                 mResetSentTV.setText("Reset Cmd Sent");
 
@@ -197,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         mSelectProtocolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     mOutputStream.write(("AT SP 0\r").getBytes());
                 } catch (IOException ieo) {
@@ -208,6 +223,13 @@ public class MainActivity extends AppCompatActivity {
                     mErrorTV.setText(s);
                     return;
                 }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
                 mSendCommandTV.setText("AT SP 0\\r");
                 mProtocolSentTV.setText("Protocol Cmd Sent");
             }
@@ -218,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
         mVerifyProtocolButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 try {
                     mOutputStream.write(("AT DP\r").getBytes());
                 } catch (IOException ieo) {
@@ -229,7 +252,15 @@ public class MainActivity extends AppCompatActivity {
                     mErrorTV.setText(s);
                     return;
                 }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
                 mVerifyProtocolTV.setText("Verify Protocol Cmd Sent");
+                mSendCommandTV.setText("AT DP\\r");
             }
         });
 
@@ -248,6 +279,13 @@ public class MainActivity extends AppCompatActivity {
                     mErrorTV.setText(s);
                     return;
                 }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
                 mSendCommandTV.setText("01 0C\\r");
             }
         });
@@ -256,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
         mSendSpeedCommandButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 try {
                     mOutputStream.write(("01 0D\r").getBytes());
                 } catch (IOException e) {
@@ -266,6 +305,13 @@ public class MainActivity extends AppCompatActivity {
                     mErrorTV.setText(s);
                     return;
                 }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
                 mSendCommandTV.setText("01 0D\\r");
 
             }
@@ -276,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         mRecvInputButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 try {
                     if (mInputStream.available() == 0) {
                         Toast.makeText(getApplicationContext(), "No data to read", Toast.LENGTH_SHORT).show();
@@ -320,11 +367,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-
-
 
         mDisconnectButton = (Button) findViewById(R.id.disconnect_button);
         mDisconnectButton.setOnClickListener(new View.OnClickListener() {
