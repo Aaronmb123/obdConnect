@@ -332,37 +332,35 @@ public class MainActivity extends AppCompatActivity {
 
                     return;
                 }
-//                byte b = 0;
-//                StringBuilder res = new StringBuilder();
-//                char c;
-//
-//                try {
-//                    while (((b = (byte) mInputStream.read()) > -1)) {
-//                        c = (char) b;
-//                        res.append(c);
-//                    }
-//                } catch (IOException e) {
-//                    mRecvInputTV.setText("Error during receive");
-//                    Writer writer = new StringWriter();
-//                    e.printStackTrace(new PrintWriter(writer));
-//                    String s = writer.toString();
-//                    mErrorTV.setText(s);
-//                    return;
-//                }
-//                mRecvInputTV.setText(res);
-
-                mBuffer = new byte[1024];
-                int numBytes = 0; // bytes returned from read()
+                byte b = 0;
+                StringBuilder res = new StringBuilder();
+                char c;
 
                 try {
-                    byte b =  (byte) mInputStream.read();
-                    mStrBuffer.append((char) b);
+                    while (((b = (byte) mInputStream.read()) > -1)) {
+                        c = (char) b;
+                         if (c == '<') break;
+                        res.append(c);
+                    }
                 } catch (IOException e) {
-                    mRecvInputTV.setText("error receiving input");
+                    mRecvInputTV.setText("Error");
+                    Writer writer = new StringWriter();
+                    e.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
                     return;
                 }
+                mRecvInputTV.setText(res);
 
-                mRecvInputTV.setText(mStrBuffer);
+//                try {
+//                    byte b =  (byte) mInputStream.read();
+//                    mStrBuffer.append((char) b);
+//                } catch (IOException e) {
+//                    mRecvInputTV.setText("error receiving input");
+//                    return;
+//                }
+//
+//                mRecvInputTV.setText(mStrBuffer);
 
 
             }
