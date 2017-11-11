@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mOBDButton;
     private Button mConnectButton;
     private Button mResetOBDButton;
+    private Button mEchoOffButton;
+    private Button mLineFeedOffButton;
     private Button mSelectProtocolButton;
     private Button mVerifyProtocolButton;
     private Button mSendRpmCommandButton;
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView mInputStreamTV;
     private TextView mOutputStreamTV;
     private TextView mResetSentTV;
+    private TextView mEchoOffTV;
+    private TextView mLineFeedOffTV;
     private TextView mProtocolSentTV;
     private TextView mVerifyProtocolTV;
     private TextView mSendCommandTV;
@@ -206,6 +210,62 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        mEchoOffTV = (TextView) findViewById(R.id.echo_text_view);
+        mEchoOffButton = (Button) findViewById(R.id.echo_button);
+        mEchoOffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mOutputStream.write(("AT E0\r").getBytes());
+                } catch (IOException ieo) {
+                    mEchoOffTV.setText("Error");
+                    mSendCommandTV.setText("");
+                    Writer writer = new StringWriter();
+                    ieo.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
+                mSendCommandTV.setText("AT E0\\r");
+                mEchoOffTV.setText("Echo Off Cmd Sent");
+            }
+        });
+
+        mLineFeedOffTV = (TextView) findViewById(R.id.echo_text_view);
+        mLineFeedOffButton = (Button) findViewById(R.id.echo_button);
+        mLineFeedOffButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mOutputStream.write(("AT L0\r").getBytes());
+                } catch (IOException ieo) {
+                    mLineFeedOffTV.setText("Error");
+                    mSendCommandTV.setText("");
+                    Writer writer = new StringWriter();
+                    ieo.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+
+                try {
+                    mOutputStream.flush();
+                } catch (IOException ieo) {
+                    Toast.makeText(getApplicationContext(), "No flush", Toast.LENGTH_SHORT).show();
+                }
+
+                mSendCommandTV.setText("AT L0\\r");
+                mLineFeedOffTV.setText("Line Feed Off Cmd Sent");
+            }
+        });
+
         mProtocolSentTV = (TextView) findViewById(R.id.protocol_sent_text_view);
         mSelectProtocolButton = (Button) findViewById(R.id.select_protocol_button);
         mSelectProtocolButton.setOnClickListener(new View.OnClickListener() {
@@ -332,33 +392,34 @@ public class MainActivity extends AppCompatActivity {
 
                     return;
                 }
-//                byte b = 0;
-//                StringBuilder res = new StringBuilder();
-//                char c;
+
+                byte b;
+                char c;
+
+                while (true) {
+                    try {
+                        b = (byte) mInputStream.read();
+                    } catch (IOException e) {
+                        mRecvInputTV.setText("Error");
+                        Writer writer = new StringWriter();
+                        e.printStackTrace(new PrintWriter(writer));
+                        String s = writer.toString();
+                        mErrorTV.setText(s);
+                        return;
+                   }
+
+                    c = (char) b;
+                    if (c == '<') break;
+                    mStrBuffer.append(c);
+                }
 
 //                try {
-//                    while (((b = (byte) mInputStream.read()) > -1)) {
-//                        c = (char) b;
-//                         if (c == '<') break;
-//                        res.append(c);
-//                    }
+//                    byte b =  (byte) mInputStream.read();
+//                    mStrBuffer.append((char) b);
 //                } catch (IOException e) {
-//                    mRecvInputTV.setText("Error");
-//                    Writer writer = new StringWriter();
-//                    e.printStackTrace(new PrintWriter(writer));
-//                    String s = writer.toString();
-//                    mErrorTV.setText(s);
+//                    mRecvInputTV.setText("error receiving input");
 //                    return;
 //                }
-//                mRecvInputTV.setText(res);
-
-                try {
-                    byte b =  (byte) mInputStream.read();
-                    mStrBuffer.append((char) b);
-                } catch (IOException e) {
-                    mRecvInputTV.setText("error receiving input");
-                    return;
-                }
 
                 mRecvInputTV.setText(mStrBuffer);
 
