@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private Button mDisconnectButton;
     private Button mSendRpmCommandButton;
     private Button mSendSpeedCommandButton;
-    private Button mSendGarbageCommandButton;
     private Button mRecvInputButton;
 
     private TextView mDeviceTV;
@@ -120,30 +119,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mSendGarbageCommandButton = (Button) findViewById(R.id.send_garbage_button);
-        mSendGarbageCommandButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String cmd = mCmdsET.getText().toString();
-                //if (cmd != null) {
-                byte[] bytes = new byte[]{0x01, 0x00};
-
-                try {
-                    mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
-                } catch (IOException e) {
-                    mSendCommandTV.setText("Bytes not sent");
-                    Writer writer = new StringWriter();
-                    e.printStackTrace(new PrintWriter(writer));
-                    String s = writer.toString();
-                    mErrorTV.setText(s);
-                    return;
-                }
-
-                //}
-            }
-        });
-
         mSendSpeedCommandButton = (Button) findViewById(R.id.send_speed_button);
         mSendSpeedCommandButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
+                    mSendCommandTV.setText("Bytes sent: " + String.format("%X %X", bytes[0], bytes[1]));
                 } catch (IOException e) {
                     mSendCommandTV.setText("Bytes not sent");
                     Writer writer = new StringWriter();
@@ -178,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
                 try {
                     mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + String.format("%X ", bytes[0]) + " " + String.format("%X ", bytes[1]));
+                    mSendCommandTV.setText("Bytes sent: " + String.format("%X %X", bytes[0], bytes[1]));
                 } catch (IOException e) {
                     mSendCommandTV.setText("Bytes not sent");
                     Writer writer = new StringWriter();
