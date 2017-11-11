@@ -41,10 +41,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mOBDButton;
     private Button mConnectButton;
-    private Button mDisconnectButton;
+    private Button mResetOBDButton;
+    private Button mSelectProtocolButton;
+    private Button mVerifyProtocolButton;
     private Button mSendRpmCommandButton;
     private Button mSendSpeedCommandButton;
     private Button mRecvInputButton;
+
+    private Button mDisconnectButton;
 
     private TextView mDeviceTV;
     private TextView mPairedDevicesTV;
@@ -52,9 +56,13 @@ public class MainActivity extends AppCompatActivity {
     private TextView mSocketTV;
     private TextView mInputStreamTV;
     private TextView mOutputStreamTV;
+    private TextView mResetSentTV;
+    private TextView mProtocolSentTV;
+    private TextView mVerifyProtocolTV;
+
     private TextView mSendCommandTV;
     private TextView mRecvInputTV;
-    private TextView mBytesReadTV;
+
     private TextView mErrorTV;
 
     private EditText mCmdsET;
@@ -66,108 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        mErrorTV = (TextView) findViewById(R.id.error_text_view);
-
-        mRecvInputTV = (TextView) findViewById(R.id.recv_input_text_view);
-        mRecvInputButton = (Button) findViewById(R.id.recv_input_button);
-        mRecvInputButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                try {
-                    if (mInputStream.available() == 0) {
-                        Toast.makeText(getApplicationContext(), "No data to read", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                } catch (IOException ioe ) {
-
-                    return;
-                }
-//                byte b = 0;
-//                StringBuilder res = new StringBuilder();
-//                char c;
-//
-//                try {
-//                    while (((b = (byte) mInputStream.read()) > -1)) {
-//                        c = (char) b;
-//                        res.append(c);
-//                    }
-//                } catch (IOException e) {
-//                    mRecvInputTV.setText("Error during receive");
-//                    Writer writer = new StringWriter();
-//                    e.printStackTrace(new PrintWriter(writer));
-//                    String s = writer.toString();
-//                    mErrorTV.setText(s);
-//                    return;
-//                }
-//                mRecvInputTV.setText(res);
-
-                mBuffer = new byte[1024];
-                int numBytes = 0; // bytes returned from read()
-
-                try {
-                    int i =  mInputStream.read();
-                    mStrBuffer.append(String.format("%X ", i));
-                } catch (IOException e) {
-                    mRecvInputTV.setText("error receiving input");
-                    return;
-                }
-
-                mRecvInputTV.setText(mStrBuffer);
-
-
-            }
-        });
-
-        mSendSpeedCommandButton = (Button) findViewById(R.id.send_speed_button);
-        mSendSpeedCommandButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String cmd = mCmdsET.getText().toString();
-                //if (cmd != null) {
-                byte[] bytes = new byte[]{0x01, 0x0D};
-
-                try {
-                    mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + String.format("%X %X", bytes[0], bytes[1]));
-                } catch (IOException e) {
-                    mSendCommandTV.setText("Bytes not sent");
-                    Writer writer = new StringWriter();
-                    e.printStackTrace(new PrintWriter(writer));
-                    String s = writer.toString();
-                    mErrorTV.setText(s);
-                    return;
-                }
-
-                //}
-            }
-        });
-        //mCmdsET = (EditText) findViewById(R.id.cmds_edit_text);
-        mSendRpmCommandButton = (Button) findViewById(R.id.send_rpm_button);
-        mSendRpmCommandButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String cmd = mCmdsET.getText().toString();
-                //if (cmd != null) {
-                byte[] bytes = new byte[]{0x01, 0x0C};
-
-                try {
-                    mOutputStream.write(bytes);
-                    mSendCommandTV.setText("Bytes sent: " + String.format("%X %X", bytes[0], bytes[1]));
-                } catch (IOException e) {
-                    mSendCommandTV.setText("Bytes not sent");
-                    Writer writer = new StringWriter();
-                    e.printStackTrace(new PrintWriter(writer));
-                    String s = writer.toString();
-                    mErrorTV.setText(s);
-                    return;
-                }
-
-                //}
-            }
-        });
-
-        mSendCommandTV = (TextView) findViewById(R.id.send_cmds_text_view);
+        mDeviceTV = (TextView) findViewById(R.id.device_text_view);
 
         mOBDButton = (Button) findViewById(R.id.paired_devices_button);
         mOBDButton.setOnClickListener(new View.OnClickListener() {
@@ -198,13 +105,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDeviceTV = (TextView) findViewById(R.id.device_text_view);
+        mErrorTV = (TextView) findViewById(R.id.error_text_view);
 
         mrfCommTV = (TextView) findViewById(R.id.rfcomm_text_view);
         mSocketTV = (TextView) findViewById(R.id.connected_text_view);
         mInputStreamTV = (TextView) findViewById(R.id.inputstream_text_view);
         mOutputStreamTV = (TextView) findViewById(R.id.outputstream_text_view);
-        mBytesReadTV = (TextView) findViewById(R.id.bytes_read_text_view);
 
         mConnectButton = (Button) findViewById(R.id.connect_button);
         mConnectButton.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +167,164 @@ public class MainActivity extends AppCompatActivity {
                 mErrorTV.setText("");
             }
         });
+
+        mSendCommandTV = (TextView) findViewById(R.id.send_cmds_text_view);
+
+        mResetSentTV = (TextView) findViewById(R.id.reset_sent_text_view);
+        mResetOBDButton = (Button) findViewById(R.id.send_reset_button);
+        mResetOBDButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mOutputStream.write(("AT Z\r").getBytes());
+                } catch (IOException ieo) {
+                    mResetSentTV.setText("Error");
+                    mSendCommandTV.setText("");
+                    Writer writer = new StringWriter();
+                    ieo.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+                mSendCommandTV.setText("AT Z\\r");
+                mResetSentTV.setText("Reset Cmd Sent");
+
+            }
+        });
+
+        mProtocolSentTV = (TextView) findViewById(R.id.protocol_sent_text_view);
+        mSelectProtocolButton = (Button) findViewById(R.id.select_protocol_button);
+        mSelectProtocolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mOutputStream.write(("AT SP 0\r").getBytes());
+                } catch (IOException ieo) {
+                    mProtocolSentTV.setText("Error");
+                    mSendCommandTV.setText("");
+                    Writer writer = new StringWriter();
+                    ieo.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+                mSendCommandTV.setText("AT SP 0\\r");
+                mProtocolSentTV.setText("Protocol Cmd Sent");
+            }
+        });
+
+        mVerifyProtocolTV = (TextView) findViewById(R.id.verify_text_view);
+        mVerifyProtocolButton = (Button) findViewById(R.id.verify_protocol_button);
+        mVerifyProtocolButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    mOutputStream.write(("AT DP\r").getBytes());
+                } catch (IOException ieo) {
+                    mVerifyProtocolTV.setText("Error");
+                    mSendCommandTV.setText("");
+                    Writer writer = new StringWriter();
+                    ieo.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+                mVerifyProtocolTV.setText("Verify Protocol Cmd Sent");
+            }
+        });
+
+        mSendRpmCommandButton = (Button) findViewById(R.id.send_rpm_button);
+        mSendRpmCommandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    mOutputStream.write(("01 0C\r").getBytes());
+                } catch (IOException e) {
+                    mSendCommandTV.setText("Error");
+                    Writer writer = new StringWriter();
+                    e.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+                mSendCommandTV.setText("01 0C\\r");
+            }
+        });
+
+        mSendSpeedCommandButton = (Button) findViewById(R.id.send_speed_button);
+        mSendSpeedCommandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    mOutputStream.write(("01 0D\r").getBytes());
+                } catch (IOException e) {
+                    mSendCommandTV.setText("Error");
+                    Writer writer = new StringWriter();
+                    e.printStackTrace(new PrintWriter(writer));
+                    String s = writer.toString();
+                    mErrorTV.setText(s);
+                    return;
+                }
+                mSendCommandTV.setText("01 0D\\r");
+
+            }
+        });
+
+        mRecvInputTV = (TextView) findViewById(R.id.recv_input_text_view);
+        mRecvInputButton = (Button) findViewById(R.id.recv_input_button);
+        mRecvInputButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (mInputStream.available() == 0) {
+                        Toast.makeText(getApplicationContext(), "No data to read", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (IOException ioe ) {
+
+                    return;
+                }
+//                byte b = 0;
+//                StringBuilder res = new StringBuilder();
+//                char c;
+//
+//                try {
+//                    while (((b = (byte) mInputStream.read()) > -1)) {
+//                        c = (char) b;
+//                        res.append(c);
+//                    }
+//                } catch (IOException e) {
+//                    mRecvInputTV.setText("Error during receive");
+//                    Writer writer = new StringWriter();
+//                    e.printStackTrace(new PrintWriter(writer));
+//                    String s = writer.toString();
+//                    mErrorTV.setText(s);
+//                    return;
+//                }
+//                mRecvInputTV.setText(res);
+
+                mBuffer = new byte[1024];
+                int numBytes = 0; // bytes returned from read()
+
+                try {
+                    byte b =  (byte) mInputStream.read();
+                    mStrBuffer.append((char) b);
+                } catch (IOException e) {
+                    mRecvInputTV.setText("error receiving input");
+                    return;
+                }
+
+                mRecvInputTV.setText(mStrBuffer);
+
+
+            }
+        });
+
+
+
+
+
 
         mDisconnectButton = (Button) findViewById(R.id.disconnect_button);
         mDisconnectButton.setOnClickListener(new View.OnClickListener() {
