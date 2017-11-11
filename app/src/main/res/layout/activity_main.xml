@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,120 +9,223 @@
     android:gravity="center"
     tools:context="com.bakeaaro.obdconnect.MainActivity">
 
-    <Button
-        android:id="@+id/paired_devices_button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get OBDII"
-/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/paired_devices_text_view"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/paired_devices_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get OBDII"/>
+            <TextView
+                android:id="@+id/paired_devices_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="paired"/>
+
+            <TextView
+                android:id="@+id/device_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="device"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/connect_button"
+                android:text="Connect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/rfcomm_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="rfcomm"/>
+            <TextView
+                android:id="@+id/connected_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="connected"/>
+            <TextView
+                android:id="@+id/inputstream_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="input"/>
+            <TextView
+                android:id="@+id/outputstream_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="output"
+                tools:layout_editor_absoluteY="139dp"
+                tools:layout_editor_absoluteX="186dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/send_reset_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset OBD"/>
+            <TextView
+                android:id="@+id/reset_sent_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="reset sent"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/device_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
+        <Button
+            android:id="@+id/send_rpm_button"
+            android:text="Send RPM Command"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="249dp"
+            tools:layout_editor_absoluteX="201dp"/>
+        <Button
+            android:id="@+id/send_speed_button"
+            android:text="Send Speed Command"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="249dp"
+            tools:layout_editor_absoluteX="16dp"/>
 
-    <Button
-        android:id="@+id/connect_button"
-        android:text="Connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-    <TextView
-        android:id="@+id/rfcomm_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-    <TextView
-        android:id="@+id/connected_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-    <TextView
-        android:id="@+id/inputstream_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-    <TextView
-        android:id="@+id/outputstream_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-
-    <!--<TextView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="Enter OBD Command:"-->
-    <!--android:layout_marginBottom="5dp"/>-->
-    <!--<EditText-->
-    <!--android:id="@+id/cmds_edit_text"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginBottom="5dp"/>-->
-
-
-    <Button
-        android:id="@+id/send_rpm_button"
-        android:text="Send RPM Command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
-    <Button
-        android:id="@+id/send_speed_button"
-        android:text="Send Speed Command"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
-
+    </LinearLayout>
 
     <TextView
         android:id="@+id/send_cmds_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-/>
+        android:hint="sent cmds"/>
 
-    <Button
-        android:id="@+id/recv_input_button"
-        android:text="Recv Input"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/recv_input_text_view"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/select_auto_protocol_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Auto Protocol"/>
+            <TextView
+                android:id="@+id/protocol_sent_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="protocol sent"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/verify_auto_protocol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Verify Protocol"/>
+            <TextView
+                android:id="@+id/verify_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="verify sent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/bytes_read_text_view"
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-/>
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/error_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/disconnect_button"
-        android:text="Disconnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-/>
+            <Button
+                android:id="@+id/recv_input_button"
+                android:text="Recv Input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-</android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/recv_input_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="recv: "/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/disconnect_button"
+                android:text="Disconnect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/error_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="error"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+</LinearLayout>
